@@ -86,6 +86,7 @@ void CDlgImage::OnPaint()
 		m_image.Draw(dc, 0, 0);
 
 	drawData(&dc);
+	drawDataCircle(&dc);
 }
 
 void CDlgImage::drawData(CDC* pDC)
@@ -100,4 +101,40 @@ void CDlgImage::drawData(CDC* pDC)
 		pDC->Ellipse(rect);
 	}
 	pDC->SelectObject(pOldPen);
+}
+
+void CDlgImage::drawDataCircle(CDC* pDC)
+{
+	if (m_bDrawCircle) {
+		int nCrossLineSize = 3;
+		CPen pen;
+		pen.CreatePen(PS_SOLID, 1, COLOR_YELLOW);
+		CPen* pOldPen = pDC->SelectObject(&pen);
+
+		CBrush brush;
+		brush.CreateStockObject(NULL_BRUSH);
+		CBrush* pOldBrush = pDC->SelectObject(&brush);
+
+		pDC->Ellipse(m_ptDataCircle.x - m_nCircleRadius, m_ptDataCircle.y - m_nCircleRadius, m_ptDataCircle.x + m_nCircleRadius, m_ptDataCircle.y + m_nCircleRadius);
+
+		pDC->SelectObject(pOldPen);
+		pDC->SelectObject(pOldBrush);
+
+		DeleteObject(pen);
+		DeleteObject(brush);
+
+		//.//
+		CPen pen2;
+		pen2.CreatePen(PS_SOLID, 1, COLOR_RED);
+		pOldPen = pDC->SelectObject(&pen2);
+
+		pDC->MoveTo(m_ptDataCircle.x - nCrossLineSize, m_ptDataCircle.y);
+		pDC->LineTo(m_ptDataCircle.x + nCrossLineSize +1, m_ptDataCircle.y);
+		pDC->MoveTo(m_ptDataCircle.x, m_ptDataCircle.y - nCrossLineSize);
+		pDC->LineTo(m_ptDataCircle.x, m_ptDataCircle.y + nCrossLineSize +1);
+
+		pDC->SelectObject(pOldPen);
+		DeleteObject(pen);
+		//.//
+	}
 }

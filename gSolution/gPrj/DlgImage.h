@@ -16,6 +16,10 @@ public:
 	int m_nDataCount = 0;
 	CPoint m_ptData[MAX_POINT];
 
+	BOOL m_bDrawCircle = FALSE;
+	CPoint m_ptDataCircle;
+	int m_nCircleRadius = 0;
+
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DLGIMAGE };
@@ -32,6 +36,7 @@ public:
 private:
 	void InitImage();
 	void drawData(CDC* pDC);
+	void drawDataCircle(CDC* pDC);
 public:
 	afx_msg void OnPaint();
 };

@@ -15,6 +15,7 @@ public:
 
 	CDlgImage *m_pDlgImage;
 	CDlgImage *m_pDlgImgResult;
+	CDlgImage* m_pDlgImgCircle;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -44,4 +45,6 @@ public:
 	afx_msg void OnBnClickedBtnProcess();
 	afx_msg void OnBnClickedBtnMakePattern();
 	afx_msg void OnBnClickedBtnGetData();
+	afx_msg void OnBnClickedBtnDrawCircle();
+	afx_msg void OnBnClickedBtnGetDataCircle();
 };

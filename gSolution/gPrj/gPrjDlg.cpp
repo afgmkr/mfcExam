@@ -10,6 +10,9 @@
 #include <iostream>
 using namespace std;
 
+#include <math.h>
+#include <time.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -73,6 +76,8 @@ BEGIN_MESSAGE_MAP(CgPrjDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_PROCESS, &CgPrjDlg::OnBnClickedBtnProcess)
 	ON_BN_CLICKED(IDC_BTN_MAKE_PATTERN, &CgPrjDlg::OnBnClickedBtnMakePattern)
 	ON_BN_CLICKED(IDC_BTN_GET_DATA, &CgPrjDlg::OnBnClickedBtnGetData)
+	ON_BN_CLICKED(IDC_BTN_DRAW_CIRCLE, &CgPrjDlg::OnBnClickedBtnDrawCircle)
+	ON_BN_CLICKED(IDC_BTN_GET_DATA_CIRCLE, &CgPrjDlg::OnBnClickedBtnGetDataCircle)
 END_MESSAGE_MAP()
 
 
@@ -118,6 +123,16 @@ BOOL CgPrjDlg::OnInitDialog()
 	m_pDlgImgResult->Create(IDD_DLGIMAGE, this);
 	m_pDlgImgResult->ShowWindow(SW_SHOW);
 	m_pDlgImgResult->MoveWindow(640, 0, 640, 480);
+
+	//.//
+	m_pDlgImgCircle = new CDlgImage;
+	m_pDlgImgCircle->Create(IDD_DLGIMAGE, this);
+	m_pDlgImgCircle->ShowWindow(SW_SHOW);
+	m_pDlgImgCircle->MoveWindow(640, 480, 640, 280);
+
+	SetDlgItemInt(IDC_EDIT_CIRCLE_RADIUS, 50);
+	srand((unsigned int)(time(NULL)));
+	//.//
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -185,6 +200,7 @@ void CgPrjDlg::OnDestroy()
 
 	if(m_pDlgImage)		delete m_pDlgImage;
 	if(m_pDlgImgResult)	delete m_pDlgImgResult;
+	if (m_pDlgImgCircle)	delete m_pDlgImgCircle;
 }
 
 void CgPrjDlg::callFunc(int n)
@@ -297,4 +313,39 @@ void CgPrjDlg::OnBnClickedBtnGetData()
 	cout << dCenterX << "\t" << dCenterY << endl;
 
 	m_pDlgImage->Invalidate();
+}
+
+
+void CgPrjDlg::OnBnClickedBtnDrawCircle()
+{
+	UpdateData();
+	m_pDlgImgCircle->m_bDrawCircle = TRUE;
+	m_pDlgImgCircle->m_nCircleRadius = GetDlgItemInt(IDC_EDIT_CIRCLE_RADIUS);
+
+	unsigned char* fm = (unsigned char*)m_pDlgImgCircle->m_image.GetBits();
+	int nWidth = m_pDlgImgCircle->m_image.GetWidth();
+	int nHeight = m_pDlgImgCircle->m_image.GetHeight();
+	int nPitch = m_pDlgImgCircle->m_image.GetPitch();
+	memset(fm, 0, nWidth * nHeight);
+
+	int x = rand() % nWidth;
+	int y = rand() % nHeight;
+	int nStartPos = m_pDlgImgCircle->m_nCircleRadius;
+	int nEndPosX = nWidth - m_pDlgImgCircle->m_nCircleRadius;
+	int nEndPosY = nHeight - m_pDlgImgCircle->m_nCircleRadius - 200;
+	int nRandomX = (rand() % (nEndPosX - nStartPos + 1)) + nStartPos;
+	int nRandomY = (rand() % (nEndPosY - nStartPos + 1)) + nStartPos;
+	//fm[y * nPitch + x] = rand() % 0xff;
+	m_pDlgImgCircle->m_ptDataCircle.x = nRandomX;
+	m_pDlgImgCircle->m_ptDataCircle.y = nRandomY;
+
+	//cout << nRandomX << "\t" << nRandomY << endl;
+
+	m_pDlgImgCircle->Invalidate();
+}
+
+
+void CgPrjDlg::OnBnClickedBtnGetDataCircle()
+{
+	cout << m_pDlgImgCircle->m_ptDataCircle.x << "\t" << m_pDlgImgCircle->m_ptDataCircle.y << endl;
 }
